@@ -1,0 +1,27 @@
+Error Details:
+
+	private String code;
+	
+	private String description;
+	
+	private Map<String,String> details;
+  
+
+Controller Code:
+
+       validatorClass.validate(input, errors);
+				if (errors.hasErrors()) {
+					
+						
+					List<ObjectError> errorList = errors.getAllErrors();
+					for (ObjectError error : errorList) {
+						errorDetailsMap.put(error.getCode(),error.getDefaultMessage());
+					}															
+					errorDetails = ErrorsDetails.createErrorDetails(config.getErrCode4000(),
+							config.getErrCode4000Msg(), errorDetailsMap);
+					ivaResponse = getIVAResponse(requestData, configFialLiarel, errorDetails,null);
+					
+					httpStatus = HttpStatus.BAD_REQUEST;
+				}else{
+         // SUCCESS
+        }
