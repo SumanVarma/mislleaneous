@@ -1,0 +1,28 @@
+https://medium.com/@cristi.rosu4/protecting-your-spring-boot-rest-endpoints-with-google-recaptcha-and-aop-31328a3f56b7
+
+Let’s create the CaptchaValidator:
+
+@Service
+public class CaptchaValidator {
+
+    private static final String GOOGLE_RECAPTCHA_ENDPOINT = "https://www.google.com/recaptcha/api/siteverify";
+
+    @Value("${google.recaptcha.secret}")
+    private String recaptchaSecret;
+
+    public boolean validateCaptcha(String captchaResponse){
+        RestTemplate restTemplate = new RestTemplate();
+
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+        requestMap.add("secret", recaptchaSecret);
+        requestMap.add("response", captchaResponse);
+
+        CaptchaResponse apiResponse = restTemplate.postForObject(GOOGLE_RECAPTCHA_ENDPOINT, requestMap, CaptchaResponse.class);
+        if(apiResponse == null){
+            return false;
+        }
+
+        return Boolean.TRUE.equals(apiResponse.getSuccess());
+    }
+
+}
